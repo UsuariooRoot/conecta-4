@@ -1,0 +1,39 @@
+.winner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.winnerContent {
+  background-color: rgba(0, 0, 0, 0.9);
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.winnerContent h2 {
+  font-size: 23px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.winnerContent header {
+  margin-bottom: 2rem;
+  font-size: 50px;
+}
+
+.winnerContent footer button {
+  padding: 8px 15px;
+  font-size: 19px;
+  border-radius: 5px;
+  border: none;
+  color: rgb(255, 255, 255);
+  background-color: rgba(176, 96, 251, 0.65);
+  cursor: pointer;
+  font-weight: 600;
+}

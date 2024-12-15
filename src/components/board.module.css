@@ -1,0 +1,26 @@
+.board {
+  padding: 0.5rem;
+  width: max-content;
+  display: grid;
+  outline: 2px solid var(--color-board);
+  background-color: rgb(15, 15, 15);
+  row-gap: 0.5rem;
+  border-radius: 10px;
+  color: #ff0000;
+}
+
+.row {
+  display: grid;
+  column-gap: 0.5rem;
+}
+
+.column {
+  width: 80px;
+  height: 80px;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--color-board);
+  font-size: 50px;
+  overflow: hidden;
+}
