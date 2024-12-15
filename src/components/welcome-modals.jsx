@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+
 function ModalContainer({ children }) {
   return (
     <div className='modal'>
@@ -16,7 +18,7 @@ export function InitialModal({ nextModal }) {
       <div className='image-placeholder'>
         <img src='/conecta4.gif' alt='' />
       </div>
-      <button onClick={() => nextModal('GameMode')}>Jugar</button>
+      <button className='btn-primary' onClick={() => nextModal('GameMode')}>Jugar</button>
     </ModalContainer>
   )
 }
@@ -25,20 +27,20 @@ export function GameModeModal({ nextModal }) {
   return (
     <ModalContainer>
       <h2>Elige un modo de juego</h2>
-      <button onClick={() => nextModal('DifficultySelection')}>Jugar con la máquina</button>
-      <button onClick={() => nextModal('PlayingAgainstMachine')}>Jugar con un amigo</button>
+      <button className='btn-primary' onClick={() => nextModal('DifficultySelection')}>Jugar con la máquina</button>
+      <Link to='/multiplayer' className='btn-primary'>Jugar con un amigo</Link>
     </ModalContainer>
   )
 }
 
-export function DifficultySelectionModal({ nextModal }) {
+export function DifficultySelectionModal() {
   return (
     <ModalContainer>
       <h2>Elige un modo de juego</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '180px', margin: '0 auto', padding: '10px 0' }}>
-        <button onClick={() => nextModal('PlayingAgainstMachine')}>Fácil</button>
-        <button onClick={() => nextModal('PlayingAgainstMachine')}>Medio</button>
-        <button onClick={() => nextModal('PlayingAgainstMachine')}>Difícil</button>
+        <Link to='/machine?difficulty=easy' className='btn-primary'>Fácil</Link>
+        <Link to='/machine?difficulty=medium' className='btn-primary'>Medio</Link>
+        <Link to='/machine?difficulty=hard' className='btn-primary'>Difícil</Link>
       </div>
     </ModalContainer>
   )

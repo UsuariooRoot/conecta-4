@@ -26,3 +26,8 @@ export const TURNS = {
 export const N_ROWS = 6
 
 export const N_COLUMNS = 7
+
+export const GAME_MODE = {
+  vsMachine: 'vsMachine',
+  multiplayer: 'multiplayer'
+}
