@@ -1,0 +1,35 @@
+.multiplayerOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.joinGameForm {
+  display: flex;
+  gap: 12px;
+
+  &>input {
+    flex-grow: 1;
+    height: max-content;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+  }
+}
+
+.button {
+  display: inline-block;
+  background-color: #00bcd4;
+  color: #121212;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #03a9f4;
+}

@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 
-function ModalContainer({ children }) {
+export function ModalContainer({ children }) {
   return (
     <div className='modal'>
       <div className='modal-content'>
@@ -28,7 +28,7 @@ export function GameModeModal({ nextModal }) {
     <ModalContainer>
       <h2>Elige un modo de juego</h2>
       <button className='btn-primary' onClick={() => nextModal('DifficultySelection')}>Jugar con la máquina</button>
-      <Link to='/multiplayer' className='btn-primary'>Jugar con un amigo</Link>
+      <Link to='/multiplayer' className='btn-primary'>Multijugador</Link>
     </ModalContainer>
   )
 }
