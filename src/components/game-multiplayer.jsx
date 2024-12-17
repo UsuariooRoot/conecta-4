@@ -1,10 +1,13 @@
-export function GameMultiplayer() {
-  // Obtener todo el estado desde el servidor
-  // const handleBoardClick = () => {
-  //   // ejecutar logica que interactura con la actualizacion del board
-  // }
+import { useParams } from 'react-router'
 
+export function GameMultiplayer() {
+  const { id } = useParams()
   return (
-    <div>Aqui va el juego multiplayer</div>
+    <>
+      <div>ID de la partida: {id}</div>
+      {/* <Board handleBoardClick={handleBoardClick} board={board} boardRef={boardRef} />
+      <WinnerModal resetGame={resetGame} winner={winner} />
+      <h2>{`Turno de: ${turn === TURNS.player2 ? '🔴' : '🟢'}`}</h2> */}
+    </>
   )
 }
