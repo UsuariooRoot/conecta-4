@@ -18,7 +18,6 @@ export function GameMultiplayerPage() {
 
     return () => {
       socket.off('game-created')
-      socket.disconnect()
     }
   }, [socket])
 
