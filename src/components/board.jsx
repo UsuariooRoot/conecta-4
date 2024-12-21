@@ -4,7 +4,7 @@ import Style from './board.module.css'
 export function Board({ handleBoardClick, board, boardRef }) {
   // Estilar board segun numero de columnas
   const columnsStyle = {
-    'grid-template-columns': `repeat(${N_COLUMNS}, 1fr)`
+    gridTemplateColumns: `repeat(${N_COLUMNS}, 1fr)`
   }
 
   return (
