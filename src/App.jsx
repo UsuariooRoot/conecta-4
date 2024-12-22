@@ -1,7 +1,6 @@
 import { Outlet, Route, Routes } from 'react-router'
 import './App.css'
 import { WelcomeGame } from './components/welcome-game.jsx'
-import { Game } from './components/game.jsx'
 import { GameMultiplayerPage } from './pages/game-multiplayer-page.jsx'
 import { GameMultiplayer } from './components/game-multiplayer.jsx'
 import { SocketProvider } from './context/websocket-conexion.jsx'
@@ -15,7 +14,7 @@ export function App() {
           <Route path='/multiplayer' element={<GameMultiplayerPage />} />
           <Route path='/multiplayer/:id' element={<GameMultiplayer />} />
         </Route>
-        <Route path='/machine' element={<Game />} />
+        {/* <Route path='/machine' element={<Game />} /> */}
       </Routes>
     </main>
   )
