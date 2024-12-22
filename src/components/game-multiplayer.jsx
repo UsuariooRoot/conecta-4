@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { useGameMultiplayer } from '../hooks/useGameMultiplayer'
+import { Board } from './board'
 
 export function GameMultiplayer() {
   const {
     joinGame,
     startGame,
+    makeMove,
+    board,
     canStart,
     currentPlayer,
     playerColor,
@@ -39,6 +42,12 @@ export function GameMultiplayer() {
           {isMyTurn ? 'Es tu turno' : 'Esperando jugada del oponente...'}
         </div>
       )}
+
+      <Board
+        makeMove={makeMove}
+        board={board}
+        disabled={!isMyTurn || status !== 'in-progress'}
+      />
 
       <span className='current-turn'>
         {currentPlayer ? `Turno de: ${currentPlayer}` : 'Juego no iniciado'}

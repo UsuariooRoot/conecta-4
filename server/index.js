@@ -127,6 +127,36 @@ io.on('connection', (socket) => {
     })
   })
 
+  // Handle moves
+  socket.on('make-move', ({ gameId, column, playerColor }) => {
+    const game = games[gameId]
+
+    if (!game || game.status !== GAME_STATES.IN_PROGRESS) {
+      socket.emit('game-error', 'Estado de juego invalido')
+      return
+    }
+
+    if (game.currentPlayer !== playerColor) {
+      socket.emit('game-error', 'No es tu turno')
+      return
+    }
+
+    const row = game.board.findLastIndex(row => row[column] === null)
+
+    if (row !== -1) {
+      game.board[row][column] = playerColor
+
+      game.currentPlayer = playerColor === 'Verde' ? 'Rojo' : 'Verde'
+
+      io.to(gameId).emit('move-made', {
+        board: game.board,
+        currentPlayer: game.currentPlayer,
+        winner: game.winner,
+        status: game.status
+      })
+    }
+  })
+
   socket.on('disconnect', () => {
     console.log('Un cliente se desconecto: ', socket.id) // remove
 

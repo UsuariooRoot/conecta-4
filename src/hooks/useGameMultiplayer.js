@@ -27,6 +27,20 @@ export function useGameMultiplayer() {
     }
   }, [socket, gameId])
 
+  // Make move
+  const makeMove = useCallback(
+    (column) => {
+      if (socket && gameId && playerColor && status === GAME_STATES.IN_PROGRESS) {
+        if (currentPlayer !== playerColor) {
+          setError('Not your turn')
+          return
+        }
+        socket.emit('make-move', { gameId, column, playerColor })
+      }
+    },
+    [socket, gameId, playerColor, currentPlayer, status]
+  )
+
   useEffect(() => {
     if (!socket) return
 
@@ -51,6 +65,13 @@ export function useGameMultiplayer() {
       setStatus(status)
     })
 
+    socket.on('move-made', ({ board, currentPlayer, winner, status }) => {
+      setBoard(board)
+      setCurrentPlayer(currentPlayer)
+      setWinner(winner)
+      setStatus(status)
+    })
+
     socket.on('player-disconnected', ({ status, board, currentPlayer }) => {
       setBoard(board)
       setStatus(status)
@@ -66,6 +87,8 @@ export function useGameMultiplayer() {
     return () => {
       socket.off('joined-game')
       socket.off('game-started')
+      socket.off('move-made')
+      socket.off('player-disconnected')
       socket.off('game-error')
     }
   }, [socket])
@@ -79,6 +102,7 @@ export function useGameMultiplayer() {
     error,
     joinGame,
     startGame,
+    makeMove,
     canStart: status === GAME_STATES.READY,
     isMyTurn: currentPlayer === playerColor
   }
