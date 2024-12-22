@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
+import { checkWinner } from './logic-game.js'
 
 const app = express()
 app.use(cors())
@@ -145,13 +146,19 @@ io.on('connection', (socket) => {
 
     if (row !== -1) {
       game.board[row][column] = playerColor
+      const winner = checkWinner(game.board, { row, col: column, player: playerColor })
+
+      if (winner) {
+        game.status = GAME_STATES.FINISHED
+        game.winner = playerColor
+      }
 
       game.currentPlayer = playerColor === 'Verde' ? 'Rojo' : 'Verde'
 
       io.to(gameId).emit('move-made', {
         board: game.board,
         currentPlayer: game.currentPlayer,
-        winner: game.winner,
+        winner,
         status: game.status
       })
     }

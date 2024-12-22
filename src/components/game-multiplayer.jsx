@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useGameMultiplayer } from '../hooks/useGameMultiplayer'
 import { Board } from './board'
+import { WinnerModal } from './winner-modal'
 
 export function GameMultiplayer() {
   const {
@@ -12,6 +13,7 @@ export function GameMultiplayer() {
     currentPlayer,
     playerColor,
     isMyTurn,
+    winner,
     status,
     error
   } = useGameMultiplayer()
@@ -48,6 +50,14 @@ export function GameMultiplayer() {
         board={board}
         disabled={!isMyTurn || status !== 'in-progress'}
       />
+
+      {winner && (
+        <WinnerModal
+          resetGame={() => console.log('reset game')}
+          winner={winner}
+          isWinner={winner === playerColor}
+        />
+      )}
 
       <span className='current-turn'>
         {currentPlayer ? `Turno de: ${currentPlayer}` : 'Juego no iniciado'}
