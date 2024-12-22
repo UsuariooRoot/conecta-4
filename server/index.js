@@ -83,6 +83,13 @@ io.on('connection', (socket) => {
       game.status = GAME_STATES.READY
     }
 
+    // Emit updated game state to all players
+    io.to(gameId).emit('game-updated', {
+      board: game.board,
+      status: game.status,
+      currentPlayer: game.currentPlayer
+    })
+
     socket.emit('joined-game', {
       gameId,
       playerColor: newPlayer.color,

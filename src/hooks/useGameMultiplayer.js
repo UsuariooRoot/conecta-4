@@ -38,6 +38,12 @@ export function useGameMultiplayer() {
       setCurrentPlayer(currentPlayer)
     })
 
+    socket.on('game-updated', ({ status, board, currentPlayer }) => {
+      setStatus(status)
+      setBoard(board)
+      setCurrentPlayer(currentPlayer)
+    })
+
     socket.on('game-started', ({ board, currentPlayer, status }) => {
       console.log('Game started') // remove
       setBoard(board)
