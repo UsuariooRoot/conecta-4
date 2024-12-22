@@ -1,13 +1,30 @@
-import { useParams } from 'react-router'
+import { useEffect } from 'react'
+import { useGameMultiplayer } from '../hooks/useGameMultiplayer'
 
 export function GameMultiplayer() {
-  const { id } = useParams()
+  const {
+    joinGame,
+    currentPlayer,
+    playerColor,
+    status,
+    error
+  } = useGameMultiplayer()
+
+  useEffect(() => {
+    joinGame()
+  }, [joinGame])
+
   return (
-    <>
-      <div>ID de la partida: {id}</div>
-      {/* <Board handleBoardClick={handleBoardClick} board={board} boardRef={boardRef} />
-      <WinnerModal resetGame={resetGame} winner={winner} />
-      <h2>{`Turno de: ${turn === TURNS.player2 ? '🔴' : '🟢'}`}</h2> */}
-    </>
+    <div className='game-container'>
+      <div className='game-status'>
+        <h2>Eres las fichas de color: {playerColor || 'Connecting...'}</h2>
+        <span className='game-state'>Estado del juego: {status}</span>
+        {error && <div className='error-message'>{error}</div>}
+      </div>
+
+      <span className='current-turn'>
+        {currentPlayer ? `Turno de: ${currentPlayer}` : 'Juego no iniciado'}
+      </span>
+    </div>
   )
 }
