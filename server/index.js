@@ -72,6 +72,9 @@ io.on('connection', (socket) => {
       color: game.players.length === 0 ? 'Verde' : 'Rojo'
     }
 
+    game.players.push(newPlayer)
+    socket.join(gameId)
+
     // Update game status and/or current player based on player count
     if (game.players.length === 1) {
       game.status = GAME_STATES.WAITING
@@ -79,9 +82,6 @@ io.on('connection', (socket) => {
     } else if (game.players.length === 2) {
       game.status = GAME_STATES.READY
     }
-
-    game.players.push(newPlayer)
-    socket.join(gameId)
 
     socket.emit('joined-game', {
       gameId,
@@ -91,18 +91,29 @@ io.on('connection', (socket) => {
       currentPlayer: game.currentPlayer
     })
 
-    // If there are 2 players, start the game
-    if (game.players.length === 2) {
-      game.status = 'in-progress'
+    console.log(games) // remove
+  })
 
-      io.to(gameId).emit('game-started', {
-        board: game.board,
-        currentPlayer: game.currentPlayer,
-        status: game.status
-      })
+  socket.on('start-game', (gameId) => {
+    const game = games[gameId]
+
+    if (!game) {
+      socket.emit('game-error', 'Partida no encontrada')
+      return
     }
 
-    console.log(games) // remove
+    if (game.players.length !== 2) {
+      socket.emit('game-error', 'Jugadores incompletos')
+    }
+
+    game.status = GAME_STATES.IN_PROGRESS
+    game.currentPlayer = game.players[0].color // First player starts
+
+    io.to(gameId).emit('game-started', {
+      board: game.board,
+      currentPlayer: game.currentPlayer,
+      status: game.status
+    })
   })
 })
 

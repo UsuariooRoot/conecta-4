@@ -20,6 +20,13 @@ export function useGameMultiplayer() {
     }
   }, [socket, gameId])
 
+  // Start game
+  const startGame = useCallback(() => {
+    if (socket && gameId) {
+      socket.emit('start-game', gameId)
+    }
+  }, [socket, gameId])
+
   useEffect(() => {
     if (!socket) return
 
@@ -56,7 +63,9 @@ export function useGameMultiplayer() {
     playerColor,
     status,
     winner,
+    error,
     joinGame,
+    startGame,
     canStart: status === GAME_STATES.READY,
     isMyTurn: currentPlayer === playerColor
   }
