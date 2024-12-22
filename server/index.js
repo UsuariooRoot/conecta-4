@@ -13,26 +13,38 @@ const io = new Server(server, {
   }
 })
 
-const games = {} // Almacenar partidas
+const N_ROWS = 6
+const N_COLUMNS = 7
+
+const GAME_STATES = {
+  WAITING: 'waiting', // Only one player has joined
+  READY: 'ready', // 2 players, ready to go
+  IN_PROGRESS: 'in-progress',
+  FINISHED: 'finished'
+}
+
+const games = {} // Store games
 
 io.on('connection', (socket) => {
-  console.log('Un cliente se conectó: ', socket.id)
+  console.log('Un cliente se conectó: ', socket.id) // remove
 
-  // Crear una nueva partida
+  // Create a new game
   socket.on('create-game', () => {
-    // Genera un ID único para la partida
+    // Generate ramdon ID
     const gameId = crypto.randomUUID()
+
     games[gameId] = {
       id: gameId,
       players: [],
-      status: 'waiting',
-      board: null,
+      status: GAME_STATES.WAITING,
+      board: Array(N_ROWS).fill(Array(N_COLUMNS).fill(null)),
       currentPlayer: null,
-      winner: null // to be fixed
+      winner: null
     }
 
     socket.emit('game-created', gameId)
-    console.log('partida creada con exito')
+    console.log('partida creada con exito') // remove
+    console.log(games[gameId]) // remove
   })
 
   // Unirse a una partida existente
@@ -49,80 +61,48 @@ io.on('connection', (socket) => {
       return
     }
 
-    if (game.status === 'in-progress') {
+    if (game.status === GAME_STATES.IN_PROGRESS) {
       socket.emit('game-error', 'La partida ya comenzó')
       return
     }
 
-    // Agregar jugador a la partida
-    game.players.push({
+    // Add new player to the game
+    const newPlayer = {
       id: socket.id,
-      color: game.players.length === 0 ? 'red' : 'yellow'
-    })
+      color: game.players.length === 0 ? 'Verde' : 'Rojo'
+    }
 
+    // Update game status and/or current player based on player count
+    if (game.players.length === 1) {
+      game.status = GAME_STATES.WAITING
+      game.currentPlayer = newPlayer.color
+    } else if (game.players.length === 2) {
+      game.status = GAME_STATES.READY
+    }
+
+    game.players.push(newPlayer)
     socket.join(gameId)
+
     socket.emit('joined-game', {
       gameId,
-      playerColor: game.players[game.players.length - 1].color
+      playerColor: newPlayer.color,
+      status: game.status,
+      board: game.board,
+      currentPlayer: game.currentPlayer
     })
 
-    // Si hay 2 jugadores, iniciar el juego
+    // If there are 2 players, start the game
     if (game.players.length === 2) {
       game.status = 'in-progress'
-      game.board = Array(6).fill().map(() => Array(7).fill(null))
-      game.currentPlayer = 'red'
 
       io.to(gameId).emit('game-started', {
         board: game.board,
-        currentPlayer: game.currentPlayer
+        currentPlayer: game.currentPlayer,
+        status: game.status
       })
     }
-  })
 
-  // Hacer un movimiento
-  socket.on('make-move', ({ gameId, column, playerColor }) => {
-    const game = games[gameId]
-
-    if (!game || game.status !== 'in-progress') {
-      socket.emit('game-error', 'Partida no válida')
-      return
-    }
-
-    if (game.currentPlayer !== playerColor) {
-      socket.emit('game-error', 'No es tu turno')
-      return
-    }
-
-    // Lógica para hacer el movimiento (simplificada)
-    const row = game.board.findLastIndex(row => row[column] === null)
-    if (row !== -1) {
-      game.board[row][column] = playerColor
-
-      // Cambiar turno
-      game.currentPlayer = playerColor === 'red' ? 'yellow' : 'red'
-
-      // Emitir movimiento a todos los jugadores
-      io.to(gameId).emit('move-made', {
-        board: game.board,
-        currentPlayer: game.currentPlayer
-      })
-    }
-  })
-
-  socket.on('disconnect', () => {
-    console.log('se desconecto un cliente: ', socket.id)
-
-    for (const gameId in games) {
-      const game = games[gameId]
-      const remainingPlayers = game.players.filter(player => player.id !== socket.id)
-
-      if (remainingPlayers.length === 0) {
-        delete games[gameId]
-      } else {
-        game.players = remainingPlayers
-        io.to(gameId).emit('player-disconnected', 'El otro jugador se desconectó')
-      }
-    }
+    console.log(games) // remove
   })
 })
 
