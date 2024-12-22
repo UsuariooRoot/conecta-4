@@ -1,3 +1,23 @@
+import { GAME_STATES, INITIAL_STATE_BOARD } from './conts.js'
+
+export function createGame(gameId) {
+  return {
+    id: gameId,
+    players: [],
+    status: 'waiting',
+    board: INITIAL_STATE_BOARD(),
+    currentPlayer: null,
+    winner: null
+  }
+}
+
+export function resetGame(game) {
+  game.status = game.players.length === 2 ? GAME_STATES.READY : GAME_STATES.WAITING
+  game.board = INITIAL_STATE_BOARD()
+  game.currentPlayer = game.players[0].color
+  game.winner = null
+}
+
 export function checkWinner(board, lastMove) {
   if (!lastMove) return null
 

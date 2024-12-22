@@ -1,0 +1,153 @@
+import { GAME_STATES } from './conts.js'
+import { checkWinner, createGame, resetGame } from './logic-game.js'
+
+export const games = {} // Store games
+
+// Mapping players to a game
+export const playerGameMap = new Map() // socketId -> gameId
+
+export function initializeGameServer(io) {
+  io.on('connection', (socket) => {
+    // Create a new game
+    socket.on('create-game', () => {
+      const gameId = crypto.randomUUID() // Generate ramdon ID
+      games[gameId] = createGame(gameId)
+
+      socket.emit('game-created', gameId)
+    })
+
+    // Join an existing game
+    socket.on('join-game', (gameId) => {
+      const game = games[gameId]
+
+      if (!game) {
+        socket.emit('game-error', 'Partida no encontrada')
+        return
+      }
+
+      if (game.players.length >= 2) {
+        socket.emit('game-error', 'Partida llena')
+        return
+      }
+
+      if (game.status === GAME_STATES.IN_PROGRESS) {
+        socket.emit('game-error', 'La partida ya comenzó')
+        return
+      }
+
+      // Add new player to the game
+      const newPlayer = {
+        id: socket.id,
+        color: game.players.length === 0 ? 'Verde' : 'Rojo'
+      }
+
+      game.players.push(newPlayer)
+      playerGameMap.set(socket.id, gameId)
+      socket.join(gameId)
+
+      // Update game status and/or current player based on player count
+      if (game.players.length === 1) {
+        game.status = GAME_STATES.WAITING
+        game.currentPlayer = newPlayer.color
+      } else if (game.players.length === 2) {
+        game.status = GAME_STATES.READY
+      }
+
+      // Emit updated game state to all players
+      io.to(gameId).emit('game-updated', {
+        board: game.board,
+        status: game.status,
+        currentPlayer: game.currentPlayer
+      })
+
+      socket.emit('joined-game', {
+        gameId,
+        playerColor: newPlayer.color,
+        status: game.status,
+        board: game.board,
+        currentPlayer: game.currentPlayer
+      })
+    })
+
+    socket.on('start-game', (gameId) => {
+      const game = games[gameId]
+
+      if (!game) {
+        socket.emit('game-error', 'Partida no encontrada')
+        return
+      }
+
+      if (game.players.length !== 2) {
+        socket.emit('game-error', 'Jugadores incompletos')
+      }
+
+      game.status = GAME_STATES.IN_PROGRESS
+      game.currentPlayer = game.players[0].color // First player starts
+
+      io.to(gameId).emit('game-started', {
+        board: game.board,
+        currentPlayer: game.currentPlayer,
+        status: game.status
+      })
+    })
+
+    // Handle moves
+    socket.on('make-move', ({ gameId, column, playerColor }) => {
+      const game = games[gameId]
+
+      if (!game || game.status !== GAME_STATES.IN_PROGRESS) {
+        socket.emit('game-error', 'Estado de juego invalido')
+        return
+      }
+
+      if (game.currentPlayer !== playerColor) {
+        socket.emit('game-error', 'No es tu turno')
+        return
+      }
+
+      const row = game.board.findLastIndex(row => row[column] === null)
+
+      if (row !== -1) {
+        game.board[row][column] = playerColor
+        const winner = checkWinner(game.board, { row, col: column, player: playerColor })
+
+        if (winner) {
+          game.status = GAME_STATES.FINISHED
+          game.winner = playerColor
+        }
+
+        game.currentPlayer = playerColor === 'Verde' ? 'Rojo' : 'Verde'
+
+        io.to(gameId).emit('move-made', {
+          board: game.board,
+          currentPlayer: game.currentPlayer,
+          winner,
+          status: game.status
+        })
+      }
+    })
+
+    socket.on('disconnect', () => {
+      const gameId = playerGameMap.get(socket.id)
+      if (!gameId) return
+
+      const game = games[gameId]
+      if (!game) return
+
+      game.players = game.players.filter(({ id }) => id !== socket.id)
+
+      playerGameMap.delete(socket.id)
+
+      if (game.players.length === 0) {
+        delete games[gameId]
+      } else {
+        resetGame(game)
+        io.to(gameId).emit('player-disconnected', {
+          status: game.status,
+          board: game.board,
+          currentPlayer: game.currentPlayer
+        })
+      }
+    })
+  })
+}
