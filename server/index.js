@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
       id: gameId,
       players: [],
       status: GAME_STATES.WAITING,
-      board: Array(N_ROWS).fill(Array(N_COLUMNS).fill(null)),
+      board: Array(N_ROWS).fill().map(() => Array(N_COLUMNS).fill(null)),
       currentPlayer: null,
       winner: null
     }
