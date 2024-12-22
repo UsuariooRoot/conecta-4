@@ -2,12 +2,13 @@ import { useRef } from 'react'
 import { N_COLUMNS } from '../const'
 import Style from './board.module.css'
 
-export function Board({ makeMove, board }) {
+export function Board({ makeMove, board, disabled = true }) {
   const boardRef = useRef(null)
 
   const handleBoardClick = (event) => {
+    if (disabled) return
     const boardRect = boardRef.current.getBoundingClientRect()
-    // Checkeamos los click por cada columna
+    // Check the clicks for each column
     const clickX = event.clientX - boardRect.left
     const columnWidth = boardRect.width / N_COLUMNS
 
@@ -18,7 +19,7 @@ export function Board({ makeMove, board }) {
     }
   }
 
-  // Estilar board segun numero de columnas
+  // Style board according to number of columns
   const columnsStyle = {
     gridTemplateColumns: `repeat(${N_COLUMNS}, 1fr)`
   }
