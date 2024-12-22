@@ -25,6 +25,9 @@ const GAME_STATES = {
 
 const games = {} // Store games
 
+// Mapping players to a game
+const playerGameMap = new Map() // socketId -> gameId
+
 io.on('connection', (socket) => {
   console.log('Un cliente se conectó: ', socket.id) // remove
 
@@ -73,6 +76,7 @@ io.on('connection', (socket) => {
     }
 
     game.players.push(newPlayer)
+    playerGameMap.set(socket.id, gameId)
     socket.join(gameId)
 
     // Update game status and/or current player based on player count
@@ -122,6 +126,40 @@ io.on('connection', (socket) => {
       status: game.status
     })
   })
+
+  socket.on('disconnect', () => {
+    console.log('Un cliente se desconecto: ', socket.id) // remove
+
+    const gameId = playerGameMap.get(socket.id)
+    if (!gameId) return
+
+    const game = games[gameId]
+    if (!game) return
+
+    game.players = game.players.filter(({ id }) => id !== socket.id)
+
+    playerGameMap.delete(socket.id)
+
+    if (game.players.length === 0) {
+      console.log(`Juego eleminado: ${gameId}`) // remove
+      delete games[gameId]
+    } else {
+      // game.status = GAME_STATES.WAITING
+      resetGame(game)
+      io.to(gameId).emit('player-disconnected', {
+        status: game.status,
+        board: game.board,
+        currentPlayer: game.currentPlayer
+      })
+    }
+  })
+
+  function resetGame(game) {
+    game.status = game.players.length === 2 ? GAME_STATES.READY : GAME_STATES.WAITING
+    game.board = Array(N_ROWS).fill(Array(N_COLUMNS).fill(null))
+    game.currentPlayer = game.players[0].color
+    game.winner = null
+  }
 })
 
 const PORT = process.env.PORT ?? 3001

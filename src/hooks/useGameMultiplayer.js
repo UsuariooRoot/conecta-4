@@ -51,6 +51,13 @@ export function useGameMultiplayer() {
       setStatus(status)
     })
 
+    socket.on('player-disconnected', ({ status, board, currentPlayer }) => {
+      setBoard(board)
+      setStatus(status)
+      setCurrentPlayer(currentPlayer)
+      setWinner(null)
+    })
+
     socket.on('game-error', (message) => {
       setError(message)
       setTimeout(() => setError(null), 3000)
