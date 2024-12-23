@@ -11,7 +11,7 @@ export function GameMultiplayer() {
     board,
     canStart,
     currentPlayer,
-    playerColor,
+    player,
     isMyTurn,
     winner,
     status,
@@ -25,7 +25,7 @@ export function GameMultiplayer() {
   return (
     <div className='game-container'>
       <div className='game-status'>
-        <h2>Eres las fichas de color: {playerColor || 'Connecting...'}</h2>
+        <h2>Eres las fichas de color: {player || 'Connecting...'}</h2>
         <span className='game-state'>Estado del juego: {status}</span>
         {error && <div className='error-message'>{error}</div>}
       </div>
@@ -55,7 +55,7 @@ export function GameMultiplayer() {
         <WinnerModal
           resetGame={() => console.log('reset game')}
           winner={winner}
-          isWinner={winner === playerColor}
+          isWinner={winner === player}
         />
       )}
 

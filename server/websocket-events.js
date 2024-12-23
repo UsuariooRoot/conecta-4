@@ -62,7 +62,7 @@ export function initializeGameServer(io) {
 
       socket.emit('joined-game', {
         gameId,
-        playerColor: newPlayer.color,
+        player: newPlayer.color,
         status: game.status,
         board: game.board,
         currentPlayer: game.currentPlayer
@@ -92,7 +92,7 @@ export function initializeGameServer(io) {
     })
 
     // Handle moves
-    socket.on('make-move', ({ gameId, column, playerColor }) => {
+    socket.on('make-move', ({ gameId, column, player }) => {
       const game = games[gameId]
 
       if (!game || game.status !== GAME_STATES.IN_PROGRESS) {
@@ -100,7 +100,7 @@ export function initializeGameServer(io) {
         return
       }
 
-      if (game.currentPlayer !== playerColor) {
+      if (game.currentPlayer !== player) {
         socket.emit('game-error', 'No es tu turno')
         return
       }
@@ -108,15 +108,15 @@ export function initializeGameServer(io) {
       const row = game.board.findLastIndex(row => row[column] === null)
 
       if (row !== -1) {
-        game.board[row][column] = playerColor
-        const winner = checkWinner(game.board, { row, col: column, player: playerColor })
+        game.board[row][column] = player
+        const winner = checkWinner(game.board, { row, col: column, player })
 
         if (winner) {
           game.status = GAME_STATES.FINISHED
-          game.winner = playerColor
+          game.winner = player
         }
 
-        game.currentPlayer = playerColor === 'Verde' ? 'Rojo' : 'Verde'
+        game.currentPlayer = player === 'Verde' ? 'Rojo' : 'Verde'
 
         io.to(gameId).emit('move-made', {
           board: game.board,

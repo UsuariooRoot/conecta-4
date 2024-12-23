@@ -7,7 +7,7 @@ export function useGameMultiplayer() {
   const socket = useSocket()
   const { id: gameId } = useParams()
   const [board, setBoard] = useState(Array(N_ROWS).fill(Array(N_COLUMNS).fill(null)))
-  const [playerColor, setPlayerColor] = useState(null)
+  const [player, setPlayer] = useState(null)
   const [currentPlayer, setCurrentPlayer] = useState(null)
   const [winner, setWinner] = useState(null)
   const [status, setStatus] = useState(GAME_STATES.WAITING)
@@ -30,23 +30,23 @@ export function useGameMultiplayer() {
   // Make move
   const makeMove = useCallback(
     (column) => {
-      if (socket && gameId && playerColor && status === GAME_STATES.IN_PROGRESS) {
-        if (currentPlayer !== playerColor) {
+      if (socket && gameId && player && status === GAME_STATES.IN_PROGRESS) {
+        if (currentPlayer !== player) {
           setError('Not your turn')
           return
         }
-        socket.emit('make-move', { gameId, column, playerColor })
+        socket.emit('make-move', { gameId, column, player })
       }
     },
-    [socket, gameId, playerColor, currentPlayer, status]
+    [socket, gameId, player, currentPlayer, status]
   )
 
   useEffect(() => {
     if (!socket) return
 
-    socket.on('joined-game', ({ playerColor, status, board, currentPlayer }) => {
-      console.log('Joined game as:', playerColor) // remove
-      setPlayerColor(playerColor)
+    socket.on('joined-game', ({ player, status, board, currentPlayer }) => {
+      console.log('Joined game as:', player) // remove
+      setPlayer(player)
       setStatus(status)
       setBoard(board)
       setCurrentPlayer(currentPlayer)
@@ -96,7 +96,7 @@ export function useGameMultiplayer() {
   return {
     board,
     currentPlayer,
-    playerColor,
+    player,
     status,
     winner,
     error,
@@ -104,6 +104,6 @@ export function useGameMultiplayer() {
     startGame,
     makeMove,
     canStart: status === GAME_STATES.READY,
-    isMyTurn: currentPlayer === playerColor
+    isMyTurn: currentPlayer === player
   }
 }
