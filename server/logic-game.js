@@ -14,7 +14,7 @@ export function createGame(gameId) {
 export function resetGame(game) {
   game.status = game.players.length === 2 ? GAME_STATES.READY : GAME_STATES.WAITING
   game.board = INITIAL_STATE_BOARD()
-  game.currentPlayer = game.players[0].color
+  game.currentPlayer = game.players[0]
   game.winner = null
 }
 
@@ -40,7 +40,7 @@ export function checkWinner(board, lastMove) {
       while (
         x >= 0 && x < board.length &&
         y >= 0 && y < board[0].length &&
-        board[x][y] === player
+        board[x][y] === player.color.hex
       ) {
         count++
         x += dir * dy

@@ -31,7 +31,7 @@ export function useGameMultiplayer() {
   const makeMove = useCallback(
     (column) => {
       if (socket && gameId && player && status === GAME_STATES.IN_PROGRESS) {
-        if (currentPlayer !== player) {
+        if (currentPlayer.id !== player.id) {
           setError('Not your turn')
           return
         }
@@ -104,6 +104,6 @@ export function useGameMultiplayer() {
     startGame,
     makeMove,
     canStart: status === GAME_STATES.READY,
-    isMyTurn: currentPlayer === player
+    isMyTurn: currentPlayer?.id === player?.id
   }
 }

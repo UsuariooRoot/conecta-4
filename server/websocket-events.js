@@ -1,4 +1,4 @@
-import { GAME_STATES } from './conts.js'
+import { DEFAULT_COLOR, GAME_STATES } from './conts.js'
 import { checkWinner, createGame, resetGame } from './logic-game.js'
 
 export const games = {} // Store games
@@ -38,7 +38,7 @@ export function initializeGameServer(io) {
       // Add new player to the game
       const newPlayer = {
         id: socket.id,
-        color: game.players.length === 0 ? 'Verde' : 'Rojo'
+        color: game.players.length === 0 ? DEFAULT_COLOR[0] : DEFAULT_COLOR[1]
       }
 
       game.players.push(newPlayer)
@@ -48,7 +48,7 @@ export function initializeGameServer(io) {
       // Update game status and/or current player based on player count
       if (game.players.length === 1) {
         game.status = GAME_STATES.WAITING
-        game.currentPlayer = newPlayer.color
+        game.currentPlayer = newPlayer
       } else if (game.players.length === 2) {
         game.status = GAME_STATES.READY
       }
@@ -62,7 +62,7 @@ export function initializeGameServer(io) {
 
       socket.emit('joined-game', {
         gameId,
-        player: newPlayer.color,
+        player: newPlayer,
         status: game.status,
         board: game.board,
         currentPlayer: game.currentPlayer
@@ -82,7 +82,7 @@ export function initializeGameServer(io) {
       }
 
       game.status = GAME_STATES.IN_PROGRESS
-      game.currentPlayer = game.players[0].color // First player starts
+      game.currentPlayer = game.players[0] // First player starts
 
       io.to(gameId).emit('game-started', {
         board: game.board,
@@ -100,7 +100,7 @@ export function initializeGameServer(io) {
         return
       }
 
-      if (game.currentPlayer !== player) {
+      if (game.currentPlayer.id !== player.id) {
         socket.emit('game-error', 'No es tu turno')
         return
       }
@@ -108,7 +108,7 @@ export function initializeGameServer(io) {
       const row = game.board.findLastIndex(row => row[column] === null)
 
       if (row !== -1) {
-        game.board[row][column] = player
+        game.board[row][column] = player.color.hex
         const winner = checkWinner(game.board, { row, col: column, player })
 
         if (winner) {
@@ -116,7 +116,7 @@ export function initializeGameServer(io) {
           game.winner = player
         }
 
-        game.currentPlayer = player === 'Verde' ? 'Rojo' : 'Verde'
+        game.currentPlayer = game.players.find(({ id }) => id !== player.id)
 
         io.to(gameId).emit('move-made', {
           board: game.board,
