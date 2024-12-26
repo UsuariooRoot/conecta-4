@@ -127,6 +127,24 @@ export function initializeGameServer(io) {
       }
     })
 
+    socket.on('reset-game', (gameId) => {
+      const game = games[gameId]
+
+      if (!game) {
+        socket.emit('game-error', 'Partida no encontrada')
+        return
+      }
+
+      resetGame(game)
+
+      io.to(gameId).emit('game-restarted', {
+        status: game.status,
+        board: game.board,
+        currentPlayer: game.currentPlayer,
+        winner: game.winner
+      })
+    })
+
     socket.on('disconnect', () => {
       const gameId = playerGameMap.get(socket.id)
       if (!gameId) return
