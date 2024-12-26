@@ -35,6 +35,19 @@ export function initializeGameServer(io) {
         return
       }
 
+      // Check if player is rejoining
+      const existingPlayer = game.players.find(p => p.id === socket.id)
+      if (existingPlayer) {
+        socket.emit('joined-game', {
+          gameId,
+          playerColor: existingPlayer,
+          status: game.status,
+          board: game.board,
+          currentPlayer: game.currentPlayer
+        })
+        return
+      }
+
       // Add new player to the game
       const newPlayer = {
         id: socket.id,
