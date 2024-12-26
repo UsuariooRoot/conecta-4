@@ -41,6 +41,13 @@ export function useGameMultiplayer() {
     [socket, gameId, player, currentPlayer, status]
   )
 
+  // Reset game
+  const resetGame = useCallback(() => {
+    if (socket && gameId) {
+      socket.emit('reset-game', gameId)
+    }
+  }, [socket, gameId])
+
   useEffect(() => {
     if (!socket) return
 
@@ -79,6 +86,13 @@ export function useGameMultiplayer() {
       setWinner(null)
     })
 
+    socket.on('game-restarted', ({ status, board, currentPlayer, winner }) => {
+      setStatus(status)
+      setBoard(board)
+      setCurrentPlayer(currentPlayer)
+      setWinner(winner)
+    })
+
     socket.on('game-error', (message) => {
       setError(message)
       setTimeout(() => setError(null), 3000)
@@ -86,9 +100,11 @@ export function useGameMultiplayer() {
 
     return () => {
       socket.off('joined-game')
+      socket.off('game-updated')
       socket.off('game-started')
       socket.off('move-made')
       socket.off('player-disconnected')
+      socket.off('game-restarted')
       socket.off('game-error')
     }
   }, [socket])
@@ -103,6 +119,7 @@ export function useGameMultiplayer() {
     joinGame,
     startGame,
     makeMove,
+    resetGame,
     canStart: status === GAME_STATES.READY,
     isMyTurn: currentPlayer?.id === player?.id
   }
