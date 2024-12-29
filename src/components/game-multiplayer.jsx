@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { useGameMultiplayer } from '../hooks/useGameMultiplayer'
 import { Board } from './board'
 import { WinnerModal } from './winner-modal'
+import { useGameMultiplayer } from '../hooks/use-game-multiplayer'
 
 export function GameMultiplayer() {
   const {
