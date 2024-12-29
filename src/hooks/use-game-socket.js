@@ -13,61 +13,63 @@ export function useGameSocket(socket, gameState) {
   useEffect(() => {
     if (!socket) return
 
-    socket.on('joined-game', ({ player, status, board, currentPlayer }) => {
-      console.log('Joined game as:', player) // remove
-      setPlayer(player)
-      setStatus(status)
-      setBoard(board)
-      setCurrentPlayer(currentPlayer)
+    const socketHandlers = {
+      'joined-game': ({ player, status, board, currentPlayer }) => {
+        setPlayer(player)
+        setStatus(status)
+        setBoard(board)
+        setCurrentPlayer(currentPlayer)
+      },
+
+      'game-updated': ({ status, board, currentPlayer }) => {
+        setStatus(status)
+        setBoard(board)
+        setCurrentPlayer(currentPlayer)
+      },
+
+      'game-started': ({ board, currentPlayer, status }) => {
+        setBoard(board)
+        setCurrentPlayer(currentPlayer)
+        setStatus(status)
+      },
+
+      'move-made': ({ board, currentPlayer, winner, status }) => {
+        setBoard(board)
+        setCurrentPlayer(currentPlayer)
+        setWinner(winner)
+        setStatus(status)
+      },
+
+      'player-disconnected': ({ status, board, currentPlayer }) => {
+        setBoard(board)
+        setStatus(status)
+        setCurrentPlayer(currentPlayer)
+        setWinner(null)
+      },
+
+      'game-restarted': ({ status, board, currentPlayer, winner }) => {
+        setStatus(status)
+        setBoard(board)
+        setCurrentPlayer(currentPlayer)
+        setWinner(winner)
+      },
+
+      'game-error': (message) => {
+        setError(message)
+        setTimeout(() => setError(null), 3000)
+      }
+    }
+
+    // Register all event handlers
+    Object.entries(socketHandlers).forEach(([event, handler]) => {
+      socket.on(event, handler)
     })
 
-    socket.on('game-updated', ({ status, board, currentPlayer }) => {
-      setStatus(status)
-      setBoard(board)
-      setCurrentPlayer(currentPlayer)
-    })
-
-    socket.on('game-started', ({ board, currentPlayer, status }) => {
-      console.log('Game started') // remove
-      setBoard(board)
-      setCurrentPlayer(currentPlayer)
-      setStatus(status)
-    })
-
-    socket.on('move-made', ({ board, currentPlayer, winner, status }) => {
-      setBoard(board)
-      setCurrentPlayer(currentPlayer)
-      setWinner(winner)
-      setStatus(status)
-    })
-
-    socket.on('player-disconnected', ({ status, board, currentPlayer }) => {
-      setBoard(board)
-      setStatus(status)
-      setCurrentPlayer(currentPlayer)
-      setWinner(null)
-    })
-
-    socket.on('game-restarted', ({ status, board, currentPlayer, winner }) => {
-      setStatus(status)
-      setBoard(board)
-      setCurrentPlayer(currentPlayer)
-      setWinner(winner)
-    })
-
-    socket.on('game-error', (message) => {
-      setError(message)
-      setTimeout(() => setError(null), 3000)
-    })
-
+    // Cleanup function
     return () => {
-      socket.off('joined-game')
-      socket.off('game-updated')
-      socket.off('game-started')
-      socket.off('move-made')
-      socket.off('player-disconnected')
-      socket.off('game-restarted')
-      socket.off('game-error')
+      Object.keys(socketHandlers).forEach((event) => {
+        socket.off(event)
+      })
     }
   }, [socket])
 }
