@@ -55,10 +55,9 @@ export function GameMultiplayer() {
       {winner && (
         <WinnerModal
           resetGame={resetGame}
-          winner={winner?.color.name}
-          isWinner={winner === player}
-        />
-      )}
+          winner={typeof winner !== 'string' && winner?.color.name}
+          isTie={winner === 'Tie'}
+        />)}
 
       <span className='current-turn'>
         {currentPlayer ? `Turno de: ${currentPlayer?.color.hex}` : 'Juego no iniciado'}
