@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Board } from './board'
 import { WinnerModal } from './winner-modal'
 import { useGameMultiplayer } from '../hooks/use-game-multiplayer'
-
+import Style from './game-multiplayer.module.css'
 export function GameMultiplayer() {
   const {
     joinGame,
@@ -24,27 +24,16 @@ export function GameMultiplayer() {
   }, [joinGame])
 
   return (
-    <div className='game-container'>
-      <div className='game-status'>
-        <h2>Eres las fichas de color: {player?.color.hex || 'Connecting...'}</h2>
-        <span className='game-state'>Estado del juego: {status}</span>
-        {error && <div className='error-message'>{error}</div>}
+    <div className={Style.gameContainer}>
+      <div className={Style.gamePlayer}>
+        <h3>Eres las fichas de color:</h3>
+        {player
+          ? (<div className={Style.piece} style={{ backgroundColor: player?.color.hex }} />)
+          : <span>Cargando...</span>}
       </div>
+      <span className={Style.gameState}>Estado del juego: {status}</span>
 
-      {canStart && (
-        <button
-          className='start-button'
-          onClick={startGame}
-        >
-          Iniciar juego
-        </button>
-      )}
-
-      {status === 'in-progress' && (
-        <div className='turn-indicator'>
-          {isMyTurn ? 'Es tu turno' : 'Esperando jugada del oponente...'}
-        </div>
-      )}
+      {error && <div className={Style.errorMessage}>{error}</div>}
 
       <Board
         makeMove={makeMove}
@@ -59,9 +48,25 @@ export function GameMultiplayer() {
           isTie={winner === 'Tie'}
         />)}
 
-      <span className='current-turn'>
-        {currentPlayer ? `Turno de: ${currentPlayer?.color.hex}` : 'Juego no iniciado'}
-      </span>
+      {
+        status === 'in-progress' && (
+          <div className={Style.currentTurn}>
+            <span>
+              Turno de:
+            </span>
+            <div className={Style.piece} style={{ backgroundColor: currentPlayer?.color.hex }} />
+          </div>
+        )
+      }
+
+      {canStart && (
+        <button
+          className={Style.startButton}
+          onClick={startGame}
+        >
+          Iniciar juego
+        </button>
+      )}
     </div>
   )
 }
