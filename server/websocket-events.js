@@ -1,5 +1,5 @@
 import { DEFAULT_COLOR, GAME_STATES } from './conts.js'
-import { checkWinner, createGame, resetGame } from './logic-game.js'
+import { checkTie, checkWinner, createGame, resetGame } from './logic-game.js'
 
 export const games = {} // Store games
 
@@ -127,6 +127,9 @@ export function initializeGameServer(io) {
         if (winner) {
           game.status = GAME_STATES.FINISHED
           game.winner = player
+        } else if (checkTie(game.board)) {
+          game.status = GAME_STATES.FINISHED
+          game.winner = 'Tie'
         }
 
         game.currentPlayer = game.players.find(({ id }) => id !== player.id)
@@ -134,7 +137,7 @@ export function initializeGameServer(io) {
         io.to(gameId).emit('move-made', {
           board: game.board,
           currentPlayer: game.currentPlayer,
-          winner,
+          winner: game.winner,
           status: game.status
         })
       }

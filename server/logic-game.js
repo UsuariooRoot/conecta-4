@@ -53,3 +53,7 @@ export function checkWinner(board, lastMove) {
 
   return null
 }
+
+export function checkTie(board) {
+  return board.every((arr) => !arr.includes(null))
+}
