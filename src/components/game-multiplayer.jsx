@@ -28,7 +28,7 @@ export function GameMultiplayer() {
       <div className={Style.gamePlayer}>
         <h3>Eres las fichas de color:</h3>
         {player
-          ? (<div className={Style.piece} style={{ backgroundColor: player?.color.hex }} />)
+          ? (<div className={Style.piece} style={{ backgroundColor: player?.color[1] }} />)
           : <span>Cargando...</span>}
       </div>
       <span className={Style.gameState}>Estado del juego: {status}</span>
@@ -44,7 +44,7 @@ export function GameMultiplayer() {
       {winner && (
         <WinnerModal
           resetGame={resetGame}
-          winner={typeof winner !== 'string' && winner?.color.name}
+          winner={typeof winner !== 'string' && winner?.color[0]}
           isTie={winner === 'Tie'}
         />)}
 
@@ -54,7 +54,7 @@ export function GameMultiplayer() {
             <span>
               Turno de:
             </span>
-            <div className={Style.piece} style={{ backgroundColor: currentPlayer?.color.hex }} />
+            <div className={Style.piece} style={{ backgroundColor: currentPlayer?.color[1] }} />
           </div>
         )
       }

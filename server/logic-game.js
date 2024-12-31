@@ -40,7 +40,7 @@ export function checkWinner(board, lastMove) {
       while (
         x >= 0 && x < board.length &&
         y >= 0 && y < board[0].length &&
-        board[x][y] === player.color.hex
+        board[x][y] === player.color[1]
       ) {
         count++
         x += dir * dy
