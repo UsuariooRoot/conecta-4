@@ -70,7 +70,8 @@ export function initializeGameServer(io) {
       io.to(gameId).emit('game-updated', {
         board: game.board,
         status: game.status,
-        currentPlayer: game.currentPlayer
+        currentPlayer: game.currentPlayer,
+        colors: AVAILABLE_COLORS // to fixed
       })
 
       socket.emit('joined-game', {
@@ -78,7 +79,8 @@ export function initializeGameServer(io) {
         player: newPlayer,
         status: game.status,
         board: game.board,
-        currentPlayer: game.currentPlayer
+        currentPlayer: game.currentPlayer,
+        colors: AVAILABLE_COLORS
       })
     })
 

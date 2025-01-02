@@ -32,10 +32,16 @@
   font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
+.actionsGame {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
 .startButton {
   background-color: #00bcd4;
   color: #fff;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;

@@ -45,10 +45,6 @@ export function GameMultiplayer() {
         disabled={!isMyTurn || status !== 'in-progress'}
       />
 
-      {availableColors && (
-        <CardSelectColor chooseColor={() => console.log('confirmar')} colors={availableColors} />
-      )}
-
       {winner && (
         <WinnerModal
           resetGame={resetGame}
@@ -56,25 +52,29 @@ export function GameMultiplayer() {
           isTie={winner === 'Tie'}
         />)}
 
-      {
-        status === 'in-progress' && (
-          <div className={Style.currentTurn}>
-            <span>
-              Turno de:
-            </span>
-            <div className={Style.piece} style={{ backgroundColor: currentPlayer?.color[1] }} />
-          </div>
-        )
-      }
-
-      {canStart && (
-        <button
-          className={Style.startButton}
-          onClick={startGame}
-        >
-          Iniciar juego
-        </button>
-      )}
+      <div className={Style.actionsGame}>
+        {availableColors && status !== 'in-progress' && (
+          <CardSelectColor colors={availableColors} chooseColor={() => console.log('confirmar')} />
+        )}
+        {canStart && (
+          <button
+            className={Style.startButton}
+            onClick={startGame}
+          >
+            Iniciar juego
+          </button>
+        )}
+        {
+          status === 'in-progress' && (
+            <div className={Style.currentTurn}>
+              <span>
+                Turno de:
+              </span>
+              <div className={Style.piece} style={{ backgroundColor: currentPlayer?.color[1] }} />
+            </div>
+          )
+        }
+      </div>
     </div>
   )
 }

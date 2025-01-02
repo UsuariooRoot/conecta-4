@@ -19,29 +19,26 @@ export function CardSelectColor({ colors, chooseColor }) {
     <div>
       <button
         onClick={toggleModal}
-        className={`${Style.button} ${Style.primaryButton}`}
+        className={`${Style.button} ${Style.secondaryButton}`}
       >
         Cambiar color
       </button>
 
       <dialog ref={modalRef} className={Style.modal}>
-        <div className={Style.modalContent}>
-          <div className={Style.cardSelectColor}>
-            <h2>Elige un color</h2>
-            <div className={Style.containerColors}>
-              {colors.map(([name, hex]) => (
-                <div key={hex}>
-                  <div
-                    className={Style.colorOption}
-                    style={{ backgroundColor: hex }}
-                    onClick={() => setColorSelected({ name, hex })}
-                  />
-                  <span>{name}</span>
-                </div>
-              ))}
-            </div>
+        <div className={Style.cardSelectColor}>
+          <h2>Elige un color</h2>
+          <div className={Style.containerColors}>
+            {colors.map(([name, hex]) => (
+              <div key={hex}>
+                <div
+                  className={Style.colorOption}
+                  style={{ backgroundColor: hex }}
+                  onClick={() => setColorSelected({ name, hex })}
+                />
+                <span>{name}</span>
+              </div>
+            ))}
           </div>
-
           <div className={Style.actions}>
             <button
               onClick={toggleModal}
@@ -57,6 +54,7 @@ export function CardSelectColor({ colors, chooseColor }) {
             </button>
           </div>
         </div>
+
       </dialog>
     </div>
   )
