@@ -15,6 +15,7 @@ export function useGameMultiplayer() {
 
   const {
     board,
+    availableColors,
     currentPlayer,
     player,
     status,
@@ -25,6 +26,7 @@ export function useGameMultiplayer() {
   return {
     // State
     board,
+    availableColors,
     currentPlayer,
     player,
     status,

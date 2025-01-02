@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 export function useGameSocket(socket, gameState) {
   const {
     setPlayer,
+    setAvailableColors,
     setStatus,
     setBoard,
     setCurrentPlayer,
@@ -14,17 +15,19 @@ export function useGameSocket(socket, gameState) {
     if (!socket) return
 
     const socketHandlers = {
-      'joined-game': ({ player, status, board, currentPlayer }) => {
+      'joined-game': ({ player, status, board, currentPlayer, colors }) => {
         setPlayer(player)
         setStatus(status)
         setBoard(board)
         setCurrentPlayer(currentPlayer)
+        setAvailableColors(colors)
       },
 
-      'game-updated': ({ status, board, currentPlayer }) => {
+      'game-updated': ({ status, board, currentPlayer, colors }) => {
         setStatus(status)
         setBoard(board)
         setCurrentPlayer(currentPlayer)
+        setAvailableColors(colors)
       },
 
       'game-started': ({ board, currentPlayer, status }) => {

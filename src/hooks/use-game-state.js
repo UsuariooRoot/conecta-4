@@ -4,6 +4,7 @@ import { GAME_STATES, N_COLUMNS, N_ROWS } from '../const'
 export function useGameState() {
   const [board, setBoard] = useState(Array(N_ROWS).fill().map(() => Array(N_COLUMNS).fill(null)))
   const [player, setPlayer] = useState(null)
+  const [availableColors, setAvailableColors] = useState(null)
   const [currentPlayer, setCurrentPlayer] = useState(null)
   const [winner, setWinner] = useState(null)
   const [status, setStatus] = useState(GAME_STATES.WAITING)
@@ -12,6 +13,8 @@ export function useGameState() {
   return {
     board,
     setBoard,
+    availableColors,
+    setAvailableColors,
     player,
     setPlayer,
     currentPlayer,

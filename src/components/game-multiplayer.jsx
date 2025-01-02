@@ -2,7 +2,10 @@ import { useEffect } from 'react'
 import { Board } from './board'
 import { WinnerModal } from './winner-modal'
 import { useGameMultiplayer } from '../hooks/use-game-multiplayer'
+import { CardSelectColor } from './card-select-color'
+
 import Style from './game-multiplayer.module.css'
+
 export function GameMultiplayer() {
   const {
     joinGame,
@@ -11,6 +14,7 @@ export function GameMultiplayer() {
     resetGame,
     board,
     canStart,
+    availableColors,
     currentPlayer,
     player,
     isMyTurn,
@@ -40,6 +44,10 @@ export function GameMultiplayer() {
         board={board}
         disabled={!isMyTurn || status !== 'in-progress'}
       />
+
+      {availableColors && (
+        <CardSelectColor chooseColor={() => console.log('confirmar')} colors={availableColors} />
+      )}
 
       {winner && (
         <WinnerModal
