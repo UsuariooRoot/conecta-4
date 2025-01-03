@@ -64,6 +64,16 @@
   background-color: #0a0a0ab3;
 }
 
+.unavailableColor::after {
+  content: '🔒';
+  position: absolute;
+  display: grid;
+  place-content: center;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #0a0a0ab3;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;

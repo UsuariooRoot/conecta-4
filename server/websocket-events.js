@@ -1,5 +1,5 @@
-import { AVAILABLE_COLORS, GAME_STATES } from './conts.js'
-import { checkTie, checkWinner, createGame, resetGame, setDefaultColor } from './logic-game.js'
+import { GAME_STATES } from './conts.js'
+import { checkTie, checkWinner, createGame, getColors, resetGame, setDefaultColor } from './logic-game.js'
 
 export const games = {} // Store games
 
@@ -71,7 +71,7 @@ export function initializeGameServer(io) {
         board: game.board,
         status: game.status,
         currentPlayer: game.currentPlayer,
-        colors: AVAILABLE_COLORS // to fixed
+        colors: getColors(game.players)
       })
 
       socket.emit('joined-game', {
@@ -80,7 +80,7 @@ export function initializeGameServer(io) {
         status: game.status,
         board: game.board,
         currentPlayer: game.currentPlayer,
-        colors: AVAILABLE_COLORS
+        colors: getColors(game.players)
       })
     })
 

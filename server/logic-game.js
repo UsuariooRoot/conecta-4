@@ -62,3 +62,15 @@ export function setDefaultColor(players) {
   if (players.length === 0) return AVAILABLE_COLORS[0]
   return AVAILABLE_COLORS.find(([_, hex]) => players[0].color[1] !== hex)
 }
+
+export function getColors(players) {
+  const colors = [...AVAILABLE_COLORS]
+  players.forEach((player) => {
+    colors.forEach((color, i) => {
+      if (player.color[1] === color[1]) {
+        colors[i][2] = true
+      }
+    })
+  })
+  return colors
+}

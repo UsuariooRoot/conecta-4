@@ -34,10 +34,14 @@ export function CardSelectColor({ colors, currentColor, chooseColor }) {
         <div className={Style.cardSelectColor}>
           <h2>Elige un color</h2>
           <div className={Style.containerColors}>
-            {colors.map(([name, hex], i) => (
+            {colors.map(([name, hex, unavailable], i) => (
               <div key={hex}>
                 <div
-                  className={`${Style.colorOption} ${i === idxCurrentColor && Style.currentColor}`}
+                  className={`
+                    ${Style.colorOption}
+                    ${i === idxCurrentColor && Style.currentColor}
+                    ${i !== idxCurrentColor && unavailable && Style.unavailableColor}
+                  `}
                   style={{ backgroundColor: hex }}
                   onClick={() => setColorSelected({ name, hex })}
                 />
