@@ -1,4 +1,4 @@
-import { GAME_STATES, INITIAL_STATE_BOARD } from './conts.js'
+import { AVAILABLE_COLORS, GAME_STATES, INITIAL_STATE_BOARD } from './conts.js'
 
 export function createGame(gameId) {
   return {
@@ -56,4 +56,9 @@ export function checkWinner(board, lastMove) {
 
 export function checkTie(board) {
   return board.every((arr) => !arr.includes(null))
+}
+
+export function setDefaultColor(players) {
+  if (players.length === 0) return AVAILABLE_COLORS[0]
+  return AVAILABLE_COLORS.find(([_, hex]) => players[0].color[1] !== hex)
 }

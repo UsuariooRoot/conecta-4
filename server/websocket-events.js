@@ -1,5 +1,5 @@
 import { AVAILABLE_COLORS, GAME_STATES } from './conts.js'
-import { checkTie, checkWinner, createGame, resetGame } from './logic-game.js'
+import { checkTie, checkWinner, createGame, resetGame, setDefaultColor } from './logic-game.js'
 
 export const games = {} // Store games
 
@@ -51,7 +51,7 @@ export function initializeGameServer(io) {
       // Add new player to the game
       const newPlayer = {
         id: socket.id,
-        color: game.players.length === 0 ? AVAILABLE_COLORS[0] : AVAILABLE_COLORS[1]
+        color: setDefaultColor(game.players)
       }
 
       game.players.push(newPlayer)
