@@ -41,10 +41,9 @@
 }
 
 .colorOption {
+  position: relative;
   width: 4rem;
   height: 4rem;
-  display: grid;
-  place-content: center;
   border-radius: 50%;
   border: 2px solid var(--color-board);
   cursor: pointer;
@@ -53,6 +52,16 @@
 
 .colorOption:hover {
   transform: scale(1.1);
+}
+
+.currentColor::after {
+  content: '✔';
+  position: absolute;
+  display: grid;
+  place-content: center;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #0a0a0ab3;
 }
 
 .actions {

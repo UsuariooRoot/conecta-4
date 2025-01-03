@@ -1,17 +1,23 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Style from './card-select-color.module.css'
 
-export function CardSelectColor({ colors, chooseColor }) {
+export function CardSelectColor({ colors, currentColor, chooseColor }) {
   const [colorSelected, setColorSelected] = useState()
+  const [idxCurrentColor, setIdxCurrentColor] = useState()
   const modalRef = useRef()
 
+  useEffect(() => {
+    if (!colors || !currentColor) return
+    const idx = colors.findIndex((color) => color[1] === currentColor[1])
+    if (idx >= 0) setIdxCurrentColor(idx)
+  }, [colors, currentColor])
+
   const toggleModal = () => {
-    if (modalRef.current) {
-      if (modalRef.current.open) {
-        modalRef.current.close()
-      } else {
-        modalRef.current.showModal()
-      }
+    if (!modalRef.current) return
+    if (modalRef.current.open) {
+      modalRef.current.close()
+    } else {
+      modalRef.current.showModal()
     }
   }
 
@@ -28,10 +34,10 @@ export function CardSelectColor({ colors, chooseColor }) {
         <div className={Style.cardSelectColor}>
           <h2>Elige un color</h2>
           <div className={Style.containerColors}>
-            {colors.map(([name, hex]) => (
+            {colors.map(([name, hex], i) => (
               <div key={hex}>
                 <div
-                  className={Style.colorOption}
+                  className={`${Style.colorOption} ${i === idxCurrentColor && Style.currentColor}`}
                   style={{ backgroundColor: hex }}
                   onClick={() => setColorSelected({ name, hex })}
                 />
@@ -44,7 +50,7 @@ export function CardSelectColor({ colors, chooseColor }) {
               onClick={toggleModal}
               className={`${Style.button} ${Style.secondaryButton}`}
             >
-              Cancelar
+              Salir
             </button>
             <button
               onClick={() => console.log('Cambiar a:', colorSelected)}
