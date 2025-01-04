@@ -69,3 +69,7 @@ export function getColors(players) {
     return [color[0], color[1], isUsed]
   })
 }
+
+export function availableColor(players, colorSelected) {
+  return players.length === 1 || players.every((p) => p.color[1] !== colorSelected[1])
+}

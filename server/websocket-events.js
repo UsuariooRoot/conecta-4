@@ -1,5 +1,5 @@
 import { GAME_STATES } from './conts.js'
-import { checkTie, checkWinner, createGame, getColors, resetGame, setDefaultColor } from './logic-game.js'
+import { availableColor, checkTie, checkWinner, createGame, getColors, resetGame, setDefaultColor } from './logic-game.js'
 
 export const games = {} // Store games
 
@@ -103,6 +103,37 @@ export function initializeGameServer(io) {
         board: game.board,
         currentPlayer: game.currentPlayer,
         status: game.status
+      })
+    })
+
+    socket.on('change-color', ({ playerId, color }) => {
+      const gameId = playerGameMap.get(playerId)
+
+      if (!gameId) {
+        socket.emit('game-error', 'Partida no encontrada')
+        return
+      }
+
+      const game = games[gameId]
+      const isColorAvailable = availableColor(game.players, color)
+
+      if (!isColorAvailable) {
+        socket.emit('game-error', 'Color no disponible')
+        return
+      }
+
+      game.players = game.players.map(p => {
+        return p.id === playerId ? { ...p, color } : p
+      })
+
+      console.log('players:', game.players)
+
+      io.to(gameId).emit('player-changed-his-color', {
+        colors: getColors(game.players)
+      })
+
+      socket.emit('color-changed', {
+        player: game.players.find(p => p.id === playerId)
       })
     })
 
