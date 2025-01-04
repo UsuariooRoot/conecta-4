@@ -64,13 +64,8 @@ export function setDefaultColor(players) {
 }
 
 export function getColors(players) {
-  const colors = [...AVAILABLE_COLORS]
-  players.forEach((player) => {
-    colors.forEach((color, i) => {
-      if (player.color[1] === color[1]) {
-        colors[i][2] = true
-      }
-    })
+  return AVAILABLE_COLORS.map(color => {
+    const isUsed = players.some(player => player.color[1] === color[1])
+    return [color[0], color[1], isUsed]
   })
-  return colors
 }
