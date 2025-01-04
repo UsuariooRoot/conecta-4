@@ -36,6 +36,15 @@ export function useGameSocket(socket, gameState) {
         setStatus(status)
       },
 
+      'player-changed-his-color': ({ colors }) => {
+        console.log(colors)
+        setAvailableColors(colors)
+      },
+
+      'color-changed': ({ player }) => {
+        setPlayer(player)
+      },
+
       'move-made': ({ board, currentPlayer, winner, status }) => {
         setBoard(board)
         setCurrentPlayer(currentPlayer)

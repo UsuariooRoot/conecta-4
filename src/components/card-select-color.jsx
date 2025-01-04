@@ -10,7 +10,7 @@ export function CardSelectColor({ colors, currentColor, chooseColor }) {
     if (!colors || !currentColor) return
     const idx = colors.findIndex((color) => color[1] === currentColor[1])
     if (idx >= 0) setIdxCurrentColor(idx)
-  }, [colors, currentColor])
+  }, [colors, currentColor, chooseColor])
 
   const toggleModal = () => {
     if (!modalRef.current) return
@@ -43,7 +43,7 @@ export function CardSelectColor({ colors, currentColor, chooseColor }) {
                     ${i !== idxCurrentColor && unavailable && Style.unavailableColor}
                   `}
                   style={{ backgroundColor: hex }}
-                  onClick={() => setColorSelected({ name, hex })}
+                  onClick={() => setColorSelected([name, hex])}
                 />
                 <span>{name}</span>
               </div>
@@ -57,7 +57,7 @@ export function CardSelectColor({ colors, currentColor, chooseColor }) {
               Salir
             </button>
             <button
-              onClick={() => console.log('Cambiar a:', colorSelected)}
+              onClick={() => chooseColor(colorSelected)}
               className={`${Style.button} ${Style.primaryButton}`}
             >
               Confirmar

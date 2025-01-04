@@ -10,6 +10,7 @@ export function GameMultiplayer() {
   const {
     joinGame,
     startGame,
+    changeColor,
     makeMove,
     resetGame,
     board,
@@ -54,7 +55,7 @@ export function GameMultiplayer() {
 
       <div className={Style.actionsGame}>
         {availableColors && status !== 'in-progress' && (
-          <CardSelectColor colors={availableColors} chooseColor={() => console.log('confirmar')} />
+          <CardSelectColor colors={availableColors} currentColor={player?.color} chooseColor={changeColor} />
         )}
         {canStart && (
           <button

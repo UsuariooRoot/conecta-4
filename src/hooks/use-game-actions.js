@@ -18,6 +18,16 @@ export function useGameActions(socket, gameId, gameState) {
     }
   }, [socket, gameId])
 
+  // Change Player color
+  const changeColor = useCallback((color) => {
+    if (socket && gameId) {
+      if (color[1] === player.color[1]) return
+      socket.emit('change-color', { playerId: player.id, color })
+    }
+
+    console.log('se pudo')
+  }, [socket, gameId, player])
+
   // Make move
   const makeMove = useCallback(
     (column) => {
@@ -42,6 +52,7 @@ export function useGameActions(socket, gameId, gameState) {
   return {
     joinGame,
     startGame,
+    changeColor,
     makeMove,
     resetGame
   }
