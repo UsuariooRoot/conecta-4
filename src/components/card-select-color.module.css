@@ -26,6 +26,8 @@
   max-width: 400px;
   text-align: center;
   color: white;
+  max-height: 80vh;
+  max-height: 80dvh;
 }
 
 .cardSelectColor h2 {
@@ -38,12 +40,14 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  overflow-y: auto;
 }
 
 .colorOption {
   position: relative;
+  aspect-ratio: 1;
   width: 4rem;
-  height: 4rem;
+  height: auto;
   border-radius: 50%;
   border: 2px solid var(--color-board);
   cursor: pointer;
@@ -51,7 +55,7 @@
 }
 
 .colorOption:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .currentColor::after {
@@ -110,4 +114,10 @@
 .primaryButton:active,
 .secondaryButton:active {
   transform: scale(0.98);
+}
+
+@media (width < 640px) {
+  .colorOption {
+    width: 3.5rem;
+  }
 }
