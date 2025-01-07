@@ -126,8 +126,6 @@ export function initializeGameServer(io) {
         return p.id === playerId ? { ...p, color } : p
       })
 
-      console.log('players:', game.players)
-
       io.to(gameId).emit('player-changed-his-color', {
         colors: getColors(game.players)
       })

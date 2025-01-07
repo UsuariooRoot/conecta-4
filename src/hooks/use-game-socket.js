@@ -37,7 +37,6 @@ export function useGameSocket(socket, gameState) {
       },
 
       'player-changed-his-color': ({ colors }) => {
-        console.log(colors)
         setAvailableColors(colors)
       },
 
