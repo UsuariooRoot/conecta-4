@@ -5,6 +5,7 @@ import { useGameMultiplayer } from '../hooks/use-game-multiplayer'
 import { CardSelectColor } from './card-select-color'
 
 import Style from './game-multiplayer.module.css'
+import { FloatingMessage } from './floating-message'
 
 export function GameMultiplayer() {
   const {
@@ -38,7 +39,7 @@ export function GameMultiplayer() {
       </div>
       <span className={Style.gameState}>Estado del juego: {status}</span>
 
-      {error && <div className={Style.errorMessage}>{error}</div>}
+      {error && <FloatingMessage message={error} type='error' />}
 
       <Board
         makeMove={makeMove}

@@ -1,0 +1,63 @@
+.messageContainer {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  background-color: white;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  max-width: 90%;
+}
+
+.messageContainer.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.error {
+  background-color: #ff4d4f;
+}
+
+.success {
+  background-color: #52c41a;
+}
+
+.warning {
+  background-color: #faad14;
+}
+
+.notify {
+  background-color: #0b8dff;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  85% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+  }
+}
+
+.messageContainer.show {
+  animation: fadeInOut 3s ease-in-out forwards;
+}
