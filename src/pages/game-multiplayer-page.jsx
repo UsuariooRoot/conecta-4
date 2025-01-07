@@ -28,14 +28,21 @@ export function GameMultiplayerPage() {
     socket.emit('create-game')
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const { gameId } = Object.fromEntries(new FormData(e.target))
+    const gameUrl = `/multiplayer/${gameId}`
+    navigate(gameUrl)
+  }
+
   return (
     <ModalContainer>
       {state?.message && <FloatingMessage message={state.message} type='error' />}
       <h2>Crea o unete a una partida</h2>
-      <div className={Style.multiplayerOptions}>
+      <div className={Style.multiplayerOptions} onSubmit={handleSubmit}>
         <form className={Style.joinGameForm}>
-          <input type='text' placeholder='ID de la partida....' />
-          <button className={Style.button}>Unirse</button>
+          <input type='text' name='gameId' placeholder='ID de la partida....' />
+          <button type='submit' className={Style.button}>Unirse</button>
         </form>
         <button className='btn-primary' onClick={createAGame}>Crear una partida</button>
       </div>
