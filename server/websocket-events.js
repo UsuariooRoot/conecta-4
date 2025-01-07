@@ -1,5 +1,5 @@
 import { GAME_STATES } from './conts.js'
-import { availableColor, checkTie, checkWinner, createGame, getColors, resetGame, setDefaultColor } from './logic-game.js'
+import { availableColor, checkTie, checkWinner, createGame, generateGameId, getColors, resetGame, setDefaultColor } from './logic-game.js'
 
 export const games = {} // Store games
 
@@ -10,7 +10,12 @@ export function initializeGameServer(io) {
   io.on('connection', (socket) => {
     // Create a new game
     socket.on('create-game', () => {
-      const gameId = crypto.randomUUID() // Generate ramdon ID
+      let gameId // Generate ramdon ID
+
+      do {
+        gameId = generateGameId(6)
+      } while (games[gameId])
+
       games[gameId] = createGame(gameId)
 
       socket.emit('game-created', gameId)

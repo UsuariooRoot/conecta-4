@@ -1,5 +1,17 @@
 import { AVAILABLE_COLORS, GAME_STATES, INITIAL_STATE_BOARD } from './conts.js'
 
+export function generateGameId(length) {
+  const validChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let id = ''
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * validChars.length)
+    id += validChars[randomIndex]
+  }
+
+  return id
+}
+
 export function createGame(gameId) {
   return {
     id: gameId,
