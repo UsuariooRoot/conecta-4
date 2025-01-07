@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router'
 
 export function useGameSocket(socket, gameState) {
   const {
@@ -10,6 +11,7 @@ export function useGameSocket(socket, gameState) {
     setWinner,
     setError
   } = gameState
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!socket) return
@@ -66,6 +68,15 @@ export function useGameSocket(socket, gameState) {
       },
 
       'game-error': (message) => {
+        if (message === 'Partida no encontrada') {
+          navigate('/multiplayer', {
+            state: {
+              message
+            },
+            replace: true
+          })
+          return
+        }
         setError(message)
         setTimeout(() => setError(null), 3000)
       }
