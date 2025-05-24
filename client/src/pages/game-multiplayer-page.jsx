@@ -41,7 +41,7 @@ export function GameMultiplayerPage() {
       <h2>Crea o unete a una partida</h2>
       <div className={Style.multiplayerOptions} onSubmit={handleSubmit}>
         <form className={Style.joinGameForm}>
-          <input type='text' name='gameId' placeholder='ID de la partida....' />
+          <input type='text' name='gameId' placeholder='ID de la partida...' />
           <button type='submit' className={Style.button}>Unirse</button>
         </form>
         <button className='btn-primary' onClick={createAGame}>Crear una partida</button>
