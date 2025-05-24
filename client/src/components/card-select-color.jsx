@@ -57,7 +57,10 @@ export function CardSelectColor({ colors, currentColor, chooseColor }) {
               Salir
             </button>
             <button
-              onClick={() => chooseColor(colorSelected)}
+              onClick={() => {
+                chooseColor(colorSelected)
+                toggleModal()
+              }}
               className={`${Style.button} ${Style.primaryButton}`}
             >
               Confirmar

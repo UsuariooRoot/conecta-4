@@ -46,23 +46,25 @@ body {
   width: 80%;
   max-width: 400px;
   box-shadow: 0 0 10px #00bcd4;
-
-  .btn-primary {
-    display: inline-block;
-    background-color: #00bcd4;
-    color: #121212;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 15px;
-  }
-
-  .btn-primary:hover {
-    background-color: #03a9f4;
-  }
 }
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  background-color: #00bcd4;
+  color: #121212;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.btn-primary:hover {
+  background-color: #03a9f4;
+}
+
 
 .image-placeholder {
   width: max-content;

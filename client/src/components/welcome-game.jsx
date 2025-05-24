@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { ModalContainer } from './welcome-modals'
+import { ModalContainer } from './modal-container'
 
 export function WelcomeGame() {
   return (
